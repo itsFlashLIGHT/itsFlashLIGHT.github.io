@@ -13,6 +13,10 @@
             font-family: 'Raleway', sans-serif;
             background: url('backgrounds/index_background.jpg') no-repeat center center fixed;
             background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Добавлено */
+            width: 100vw; /* Добавлено */
         }
 
         /* Скрывающаяся навигация */
@@ -70,6 +74,12 @@
         /* Смещение заголовка вниз */
         header {
             padding-top: 150px; /* Увеличиваем отступ сверху */
+            height: 100vh; /* Добавлено */
+            display: flex; /* Добавлено */
+            align-items: center; /* Добавлено */
+            justify-content: center; /* Добавлено */
+            background: url('backgrounds/background_welcome.svg') no-repeat center center; /* Исправлено */
+            background-size: cover; /* Добавлено */
         }
     </style>
 </head>
@@ -108,7 +118,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Проект">
+                    <img src="cards/letter_card.svg" class="card-img-top" alt="Проект">
                     <div class="card-body">
                         <h5 class="card-title">Генерация поздравительных писем</h5>
                         <p class="card-text">Проект по созданию сайта для генерации поздравительных писем.</p>
