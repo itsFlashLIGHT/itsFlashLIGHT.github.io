@@ -51,6 +51,22 @@
         .navbar-nav:hover .nav-link:not(:hover) {
             color: lightgray !important;
         }
+        /* Заголовок блока с прямоугольником и скругленными углами */
+        .welcome-block {
+            background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для контраста */
+            border-radius: 15px;
+            padding: 50px 30px;
+            margin-top: 120px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-block h1 {
+            font-size: 3rem;
+            color: #1976D2; /* Цвет заголовка */
+        }
+        .welcome-block p {
+            font-size: 1.25rem;
+            color: #333;
+        }
         /* Смещение заголовка вниз */
         header {
             padding-top: 150px; /* Увеличиваем отступ сверху */
@@ -76,11 +92,15 @@
         </div>
     </nav>
 
-    <!-- Главный блок -->
+    <!-- Главный блок с заголовком и текстом, с использованием MDB Card -->
     <header class="bg-light text-center py-5">
-        <h1 class="display-4">Добро пожаловать!</h1>
-        <p class="lead">Проекты, созданные вместе со школьниками</p>
-        <a href="#projects" class="btn btn-primary btn-lg">Посмотреть проекты</a>
+        <div class="card shadow-lg rounded-3 mx-auto" style="max-width: 800px;">
+            <div class="card-body">
+                <h1 class="display-4 text-primary">Добро пожаловать!</h1>
+                <p class="lead text-muted">Проекты, созданные вместе со школьниками</p>
+                <a href="#projects" class="btn btn-primary btn-lg">Посмотреть проекты</a>
+            </div>
+        </div>
     </header>
 
     <!-- Раздел с карточками -->
