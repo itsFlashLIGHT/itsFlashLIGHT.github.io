@@ -81,6 +81,12 @@
             background: url('backgrounds/background_welcome.svg') no-repeat center center; /* Исправлено */
             background-size: cover; /* Добавлено */
         }
+        /* Фиксированный размер для изображений преподавателей */
+        .teacher-img {
+            object-fit: cover;
+            height: 300px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +160,7 @@
     <section id="about" class="container my-5">
         <div class="row">
             <div class="col-md-4">
-                <div class="card mb-4 h-100" style="background-color: #ba68c8;"> <!-- Material Purple 300 -->
+                <div class="card mb-4 h-100" style="background-color: #E1BEE7;"> <!-- Material Purple 100 -->
                     <div class="card-body">
                         <h2 class="display-4 text-primary">О нас</h2>
                         <p class="lead text-muted">Этот сайт создан ребятами "Информационно-технологического класса" совместно с преподавателями для общего доступа к нашим проектам. Здесь можно ознакомиться с нашими работами, которые мы выполняем для разных конкурсов и соревнований.</p>
@@ -162,19 +168,19 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card mb-4 h-100" style="background-color: #d32f2f;"> <!-- Material Red 700 -->
-                    <img src="teachers/avatar_me.jpeg" class="card-img-top" alt="Преподаватель 1" style="object-fit: cover; height: 300px;">
+                <div class="card mb-4 h-100" style="background-color: #FFCDD2;"> <!-- Material Red 100 -->
+                    <img src="teachers/avatar_me.jpeg" class="card-img-top teacher-img" alt="Преподаватель 1">
                     <div class="card-body">
-                        <h5 class="card-title">Дыбов Алексей Евгеньевич</h5>
+                        <h5 class="card-title"><strong>Дыбов Алексей Евгеньевич</strong></h5>
                         <p class="card-text">Мастер производственного обучения и специалист широкого профиля.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card mb-4 h-100" style="background-color: #0288d1;"> <!-- Material Blue 700 -->
-                    <img src="path/to/teacher2.jpg" class="card-img-top" alt="Преподаватель 2">
+                <div class="card mb-4 h-100" style="background-color: #B3E5FC;"> <!-- Material Blue 100 -->
+                    <img src="teachers/avatar_alexander.png" class="card-img-top teacher-img" alt="Преподаватель 2">
                     <div class="card-body">
-                        <h5 class="card-title">Финагеев Александр Владимирович</h5>
+                        <h5 class="card-title"><strong>Финагеев Александр Владимирович</strong></h5>
                         <p class="card-text">Инженер-программист.</p>
                     </div>
                 </div>
