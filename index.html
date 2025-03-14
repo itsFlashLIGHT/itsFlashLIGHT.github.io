@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наши проекты</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js" defer></script>
+    <style>
+        /* Скрывающаяся навигация */
+        .navbar {
+            transition: top 0.3s;
+        }
+        .hidden-nav {
+            top: -70px;
+        }
+        /* Карточки с эффектами */
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Кнопки: градиентная анимация смены цвета */
+        .btn {
+            transition: background 0.5s ease-in-out, color 0.3s, border-color 0.3s;
+            background: linear-gradient(45deg, #1976D2, #64B5F6); /* Material Blue -> Light Blue */
+        }
+        .btn:hover {
+            background: linear-gradient(45deg, #64B5F6, #BBDEFB) !important; /* Светло-голубой градиент */
+            color: black !important;
+            border: 2px solid black !important;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand text-white" href="#">Наши проекты</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-white" href="#projects">Наши проекты</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#awards">Наши награды</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#about">О нас</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#contacts">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный блок -->
+    <header class="bg-light text-center py-5">
+        <h1 class="display-4">Добро пожаловать!</h1>
+        <p class="lead">Проекты, созданные вместе со школьниками</p>
+        <a href="#projects" class="btn btn-primary btn-lg">Посмотреть проекты</a>
+    </header>
+
+    <!-- Раздел с карточками -->
+    <section id="projects" class="container my-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Проект">
+                    <div class="card-body">
+                        <h5 class="card-title">Проект 1</h5>
+                        <p class="card-text">Краткое описание проекта.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Скрипт для скрытия/показа навигации -->
+    <script>
+        let prevScrollPos = window.pageYOffset;
+        window.onscroll = function () {
+            let currentScrollPos = window.pageYOffset;
+            document.getElementById("navbar").classList.toggle("hidden-nav", prevScrollPos < currentScrollPos);
+            prevScrollPos = currentScrollPos;
+        };
+    </script>
+</body>
+</html>
