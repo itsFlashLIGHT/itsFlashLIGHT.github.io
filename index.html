@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Наши проекты</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js" defer></script>
     <style>
+        /* Подключение шрифта Raleway */
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: url('backgrounds/index_background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
         /* Скрывающаяся навигация */
         .navbar {
             transition: top 0.3s;
@@ -45,12 +53,7 @@
         }
         /* Смещение заголовка вниз */
         header {
-            background: url('backgrounds/index_background.svg') no-repeat center center fixed; /* Замена на SVG */
-            background-size: cover;
-            padding-top: 100px;
-            width: 100vw; /* Добавлено */
-            height: 100vh; /* Добавлено */
-            margin: 0; /* Добавлено */
+            padding-top: 150px; /* Увеличиваем отступ сверху */
         }
     </style>
 </head>
