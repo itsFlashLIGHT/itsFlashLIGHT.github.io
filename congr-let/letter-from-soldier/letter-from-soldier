@@ -168,11 +168,26 @@
     <script>
         document.getElementById('drawButton').addEventListener('click', function() {
             const name = document.getElementById('nameInput').value;
-            const age = parseInt(document.getElementById('ageInput').value, 10);
-            const textSelect = document.getElementById('textSelect').value;
-            const selectedFont = 'VictoryFont';
-            const fontSize = 50;
+            const ageInput = document.getElementById('ageInput').value;
+            const age = parseInt(ageInput, 10);
             const imageSelect = document.getElementById('imageSelect');
+            const selectedImage = imageSelect.value;
+
+            if (!name) {
+                alert('Пожалуйста, введите имя.');
+                return;
+            }
+
+            if (isNaN(age)) {
+                alert('Пожалуйста, введите корректный возраст.');
+                return;
+            }
+
+            if (!selectedImage) {
+                alert('Пожалуйста, выберите шаблон изображения.');
+                return;
+            }
+
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
             const loader = document.getElementById('loader');
@@ -185,7 +200,6 @@
             progressBar.style.width = '0%';
             progressBar.innerText = '0%';
 
-            // Определяем текст письма
             const texts = {
                 text1: `Здравствуй, ${name},\nВ этом году мы отмечаем 80-ю годовщину Великой Победы – дня, который стал символом мужества, чести и несгибаемой воли нашего народа. Мы сражались за мирное небо, и теперь ваша задача – сохранить его, помня о подвигах прошлого и строя достойное будущее.\nЯ пишу тебе, чтобы вдохновить на успешную учебу и новые достижения. Каждый день, погружаясь в знания, ты строишь своё будущее, которое обязательно будет светлым и интересным.\nПомни, что каждая трудность — это лишь ступенька к успеху. Не бойся задавать вопросы, стремиться к лучшему и верить в себя. Удача обычно улыбается тем, кто усердно трудится и не сдается перед преградами.\nЖелаю тебе терпения, настойчивости и веры в свои силы. Учись с радостью и вдохновением, ведь это время – самое важное в твоей жизни.\nС уважением,\nНеизвестный солдат`,
                 text2: `Здравствуй, ${name},\n80 лет назад наш народ одержал Великую Победу, отстояв свободу и мир для будущих поколений. Помни, что сила духа, настойчивость и труд – ключи к великим свершениям, и именно от вас зависит, каким будет завтрашний день.\nЯ пишу тебе, чтобы напомнить, как важна учеба и стремление к знаниям. Каждый день — это возможность стать лучше, узнать что-то новое и сделать шаг к своим мечтам. Учеба требует усердия и терпения, но эти усилия принесут плоды.\nПусть каждое занятие будет для тебя шагом к успеху. Не бойся встречать трудности — они закаляют дух и делают сильнее. Удача сопутствует тем, кто верит в себя и упорно трудится.\nПомни, что каждый маленький успех — это значительное достижение. Желаю тебе удачи во всех начинаниях. Сохраняй любопытство и не останавливайся на достигнутом.\nС уважением,\nНеизвестный солдат`,
@@ -195,18 +209,16 @@
                 text6: `Здравствуй, ${name},\nВеликая Победа – это не просто дата в календаре, а символ стойкости, силы и веры в лучшее будущее. Прошло 80 лет, но этот подвиг живет в наших сердцах, напоминая, что усердие, смелость и честность всегда ведут к победе.\nХочу пожелать тебе здоровья и счастья, пусть каждый новый день приносит радость.\nПомни, что даже в самых темных моментах есть место свету. Окружай себя людьми, которые вдохновляют тебя, и не забывай о своих мечтах. Каждый шаг вперед — это шаг к светлому будущему.\nСохраняй веру в добро, добро обязательно вернется. Пусть в твоей жизни будет больше улыбок, тепла и заботы. Береги себя и тех, кто рядом.\nНадеюсь, вскоре мы увидим мир, в котором нет места войне. Желаю тебе любви, мужества и счастья в каждой мелочи.\nС уважением,\nНеизвестный солдат`
             };
 
-            // Логика выбора текста в зависимости от возраста
             let textSelect;
             if (age < 18) {
-                const randomIndex = Math.floor(Math.random() * 3) + 1; // Случайное число от 1 до 3
+                const randomIndex = Math.floor(Math.random() * 3) + 1;
                 textSelect = `text${randomIndex}`;
             } else {
-                const randomIndex = Math.floor(Math.random() * 3) + 4; // Случайное число от 4 до 6
+                const randomIndex = Math.floor(Math.random() * 3) + 4;
                 textSelect = `text${randomIndex}`;
             }
 
             const templateText = texts[textSelect];
-            const selectedImage = imageSelect.value;
             const img = new Image();
 
             img.onload = function() {
@@ -214,16 +226,16 @@
                 canvas.height = img.height;
                 ctx.drawImage(img, 0, 0);
 
-                let topOffset = 750; // Отступ сверху для текста
-                const leftOffset = 150; // Отступ слева
-                const rightOffset = 150; // Отступ справа
+                let topOffset = 750;
+                const leftOffset = 150;
+                const rightOffset = 150;
 
-                ctx.font = `${fontSize}px ${selectedFont}`;
+                ctx.font = `50px VictoryFont`;
                 ctx.fillStyle = 'black';
 
                 const words = templateText.split(' ');
                 let line = '';
-                const lineHeight = parseInt(fontSize) + 10;
+                const lineHeight = 60;
 
                 for (let i = 0; i < words.length; i++) {
                     const testLine = line + words[i] + ' ';
