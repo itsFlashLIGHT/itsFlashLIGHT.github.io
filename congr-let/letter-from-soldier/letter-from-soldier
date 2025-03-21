@@ -1,0 +1,286 @@
+<html lang="ru"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Письмо от Неизвестного солдата</title>
+    <style>
+        @font-face {
+            font-family: 'RustFont';
+            src: url('rust.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'RustFont', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://i.pinimg.com/originals/a5/60/ee/a560ee6aa4dda4cf1052822a3c167ef2.gif');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            background: rgba(50, 50, 50, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            min-height: 80vh;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-top: 20px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        label {
+            color: #ffffff;
+            margin: 10px 0 5px;
+            margin-top: 20px;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        #loader {
+            font-family: 'RustFont', sans-serif;
+            display: none;
+            margin-top: 20px;
+            color: #a8a8a8;
+            text-align: center;
+        }
+
+        input, select, button {
+            font-family: 'RustFont', sans-serif;
+            font-size: 20px;
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            backdrop-filter: blur(5px);
+        }
+
+        select {
+            background: rgba(0, 0, 0, 0.38);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12.6px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        button {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #progress {
+            font-family: 'RustFont', sans-serif;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.658);
+            border: 1px solid rgba(204, 204, 204, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+            margin-top: 20px;
+        }
+
+        #progressBar {
+            width: 0;
+            height: 20px;
+            background-color: rgba(139, 0, 0, 0.7);
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 10px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+    </style>
+<script type="text/javascript" src="chrome-extension://epebfcehmdedogndhlcacafjaacknbcm/nmcades_plugin_api.js"></script></head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Письмо от Неизвестного солдата</h1>
+
+            <label for="nameInput">Имя:</label>
+            <input type="text" id="nameInput" placeholder="Введите имя">
+
+            <label for="ageInput">Возраст:</label>
+            <input type="number" id="ageInput" placeholder="Введите возраст">
+
+            <label for="textSelect">Текст письма:</label>
+            <select id="textSelect">
+                <option value="text1">Текст 1</option>
+                <option value="text2">Текст 2</option>
+                <option value="text3">Текст 3</option>
+                <option value="text4">Текст 4</option>
+                <option value="text5">Текст 5</option>
+                <option value="text6">Текст 6</option>
+            </select>
+
+            <label for="imageSelect">Шаблон:</label>
+            <select id="imageSelect">
+                <option value="images/template1.png">Шаблон 1</option>
+                <option value="images/template2.png">Шаблон 2</option>
+                <option value="images/template3.png">Шаблон 3</option>
+                <option value="images/template4.png">Шаблон 4</option>
+                <option value="images/template5.png">Шаблон 5</option>
+            </select>
+
+            <button id="drawButton">Получить письмо</button>
+            <canvas id="canvas"></canvas>
+            <div id="loader">Создание письма...</div>
+            <div id="progress"><div id="progressBar">0%</div></div>
+        </div>
+        <div class="footer">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('drawButton').addEventListener('click', function() {
+            const name = document.getElementById('nameInput').value;
+            const age = parseInt(document.getElementById('ageInput').value, 10);
+            const textSelect = document.getElementById('textSelect').value;
+            const selectedFont = 'VictoryFont';
+            const fontSize = 50;
+            const imageSelect = document.getElementById('imageSelect');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const loader = document.getElementById('loader');
+            const progress = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+
+            loader.style.display = 'block';
+            progress.style.display = 'block';
+
+            progressBar.style.width = '0%';
+            progressBar.innerText = '0%';
+
+            // Определяем текст письма
+            const texts = {
+                text1: `Здравствуй, ${name},\nВ этом году мы отмечаем 80-ю годовщину Великой Победы – дня, который стал символом мужества, чести и несгибаемой воли нашего народа. Мы сражались за мирное небо, и теперь ваша задача – сохранить его, помня о подвигах прошлого и строя достойное будущее.\nЯ пишу тебе, чтобы вдохновить на успешную учебу и новые достижения. Каждый день, погружаясь в знания, ты строишь своё будущее, которое обязательно будет светлым и интересным.\nПомни, что каждая трудность — это лишь ступенька к успеху. Не бойся задавать вопросы, стремиться к лучшему и верить в себя. Удача обычно улыбается тем, кто усердно трудится и не сдается перед преградами.\nЖелаю тебе терпения, настойчивости и веры в свои силы. Учись с радостью и вдохновением, ведь это время – самое важное в твоей жизни.\nС уважением,\nНеизвестный солдат`,
+                text2: `Здравствуй, ${name},\n80 лет назад наш народ одержал Великую Победу, отстояв свободу и мир для будущих поколений. Помни, что сила духа, настойчивость и труд – ключи к великим свершениям, и именно от вас зависит, каким будет завтрашний день.\nЯ пишу тебе, чтобы напомнить, как важна учеба и стремление к знаниям. Каждый день — это возможность стать лучше, узнать что-то новое и сделать шаг к своим мечтам. Учеба требует усердия и терпения, но эти усилия принесут плоды.\nПусть каждое занятие будет для тебя шагом к успеху. Не бойся встречать трудности — они закаляют дух и делают сильнее. Удача сопутствует тем, кто верит в себя и упорно трудится.\nПомни, что каждый маленький успех — это значительное достижение. Желаю тебе удачи во всех начинаниях. Сохраняй любопытство и не останавливайся на достигнутом.\nС уважением,\nНеизвестный солдат`,
+                text3: `Здравствуй, ${name},\nПрошло 80 лет с того дня, когда наш народ с честью и отвагой отстоял право на мирную жизнь. Мы верили в светлое будущее и боролись за него, а теперь ваша очередь сделать этот мир лучше – знаниями, добрыми делами и уважением к истории.\nЯ пишу тебе, чтобы передать свои сердечные пожелания. Учеба — это удивительное путешествие, полное открытий и возможностей. Каждое занятие приближает тебя к мечтам, и я верю, что ты сможешь добиться многого.\nНе бойся задавать вопросы и искать ответы. Это помогает расти и развиваться. Стремись к знаниям с энтузиазмом, и они откроют перед тобой новые горизонты.\nЖелаю тебе удачи в учебе и вдохновения в каждом начинании. Пусть доброта и мудрость ведут тебя по жизни, а поддержка близких всегда будет рядом. Сохраняй веру в себя и двигайся к своим целям, и тогда все обязательно получится!\nС уважением,\nНеизвестный солдат`,
+                text4: `Здравствуй, ${name},\n80 лет назад мы преодолели страшные испытания ради мира и свободы. Пусть память о подвиге нашего народа вдохновляет тебя на новые достижения, учит преодолевать трудности и наполняет гордостью за великую страну.\nЯ пишу тебе, чтобы передать свои лучшие пожелания. Жизнь — это ценное дарование, и я надеюсь, что ты сможешь наполнить каждый день радостью и смыслом. Стремись к своим мечтам и не бойся пробовать новое.\nСложности встречаются на пути, но именно они делают нас сильнее и мудрее. Не забывай беречь тех, кто рядом, и делиться теплом с окружающими.\nПусть каждый новый день приносит тебе счастье, удачу и вдохновение. Открывай свое сердце для любви и дружбы, и мир ответит тебе тем же. Желаю здоровья, гармонии и благополучия. Пусть все мечты сбудутся!\nС уважением,\nНеизвестный солдат`,
+                text5: `Здравствуй, ${name},\nВ этом году мы отмечаем 80 лет со дня Великой Победы – дня, когда мужество и единство нашего народа победили тьму. Пусть эта память дает тебе силы идти вперед, добиваться целей и быть достойным продолжателем лучших традиций.\nЯ часто думаю о простых радостях жизни и о том, как важно находить счастливые мгновения. Хочу пожелать тебе всего самого светлого и доброго. Пусть каждый день приносит новые возможности и вдохновение.\nСложности, которые мы встречаем, делают нас сильнее, а доброта и поддержка близких помогают преодолевать любые преграды. Открой свое сердце для счастья и любви.\nЦени моменты, проведенные с друзьями и семьей, и старайся делать этот мир лучше своим добрым словом и поступками. Желаю здоровья, радости и благополучия на каждом шагу. Пусть твоя жизнь будет наполнена яркими красками и теплом!\nС искренними пожеланиями,\nНеизвестный солдат`,
+                text6: `Здравствуй, ${name},\nВеликая Победа – это не просто дата в календаре, а символ стойкости, силы и веры в лучшее будущее. Прошло 80 лет, но этот подвиг живет в наших сердцах, напоминая, что усердие, смелость и честность всегда ведут к победе.\nХочу пожелать тебе здоровья и счастья, пусть каждый новый день приносит радость.\nПомни, что даже в самых темных моментах есть место свету. Окружай себя людьми, которые вдохновляют тебя, и не забывай о своих мечтах. Каждый шаг вперед — это шаг к светлому будущему.\nСохраняй веру в добро, добро обязательно вернется. Пусть в твоей жизни будет больше улыбок, тепла и заботы. Береги себя и тех, кто рядом.\nНадеюсь, вскоре мы увидим мир, в котором нет места войне. Желаю тебе любви, мужества и счастья в каждой мелочи.\nС уважением,\nНеизвестный солдат`
+            };
+
+            // Логика выбора текста в зависимости от возраста
+            let textSelect;
+            if (age < 18) {
+                const randomIndex = Math.floor(Math.random() * 3) + 1; // Случайное число от 1 до 3
+                textSelect = `text${randomIndex}`;
+            } else {
+                const randomIndex = Math.floor(Math.random() * 3) + 4; // Случайное число от 4 до 6
+                textSelect = `text${randomIndex}`;
+            }
+
+            const templateText = texts[textSelect];
+            const selectedImage = imageSelect.value;
+            const img = new Image();
+
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                let topOffset = 750; // Отступ сверху для текста
+                const leftOffset = 150; // Отступ слева
+                const rightOffset = 150; // Отступ справа
+
+                ctx.font = `${fontSize}px ${selectedFont}`;
+                ctx.fillStyle = 'black';
+
+                const words = templateText.split(' ');
+                let line = '';
+                const lineHeight = parseInt(fontSize) + 10;
+
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + words[i] + ' ';
+                    const testWidth = ctx.measureText(testLine).width;
+
+                    if (testWidth > (canvas.width - leftOffset - rightOffset)) {
+                        ctx.fillText(line.trim(), leftOffset, topOffset);
+                        line = words[i] + ' ';
+                        topOffset += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line.trim(), leftOffset, topOffset);
+
+                const link = document.createElement('a');
+                link.download = 'letter.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                loader.style.display = 'none';
+                progress.style.display = 'none';
+            };
+
+            img.src = selectedImage;
+
+            let progressWidth = 0;
+            const interval = setInterval(() => {
+                if (progressWidth >= 100) {
+                    clearInterval(interval);
+                } else {
+                    progressWidth++;
+                    progressBar.style.width = progressWidth + '%';
+                    progressBar.innerText = progressWidth + '%';
+                }
+            }, 30);
+        });
+
+        function loadFonts(fonts) {
+            return Promise.all(fonts.map(font => {
+                return new Promise(resolve => {
+                    const fontFace = new FontFace(font.name, `url(${font.url})`);
+                    fontFace.load().then(function(loadedFont) {
+                        document.fonts.add(loadedFont);
+                        resolve();
+                    });
+                });
+            }));
+        }
+
+        loadFonts([
+            { name: 'RustFont', url: 'rust.ttf' }
+        ]).then(() => {
+            console.log('Шрифты загружены!');
+        });
+    </script>
+
+</body></html>
