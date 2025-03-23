@@ -235,7 +235,8 @@
                 progress.style.display = 'none'; // Скрываем прогресс-бар
             };
 
-            img.src = 'images/template1.png'; // Путь к изображению шаблона
+            const randomTemplateIndex = Math.floor(Math.random() * 5) + 1; // Случайный выбор шаблона от 1 до 5
+            img.src = `congr-let/letter-from-soldier/templates/template${randomTemplateIndex}.png`; // Путь к случайному шаблону
 
             let progressWidth = 0;
             const interval = setInterval(() => {
