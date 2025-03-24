@@ -1,4 +1,6 @@
-<html lang="ru"><head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Письмо от Неизвестного солдата</title>
@@ -47,19 +49,12 @@
         label {
             color: #ffffff;
             margin: 10px 0 5px;
-            margin-top: 20px;
         }
 
         canvas {
-            display: none;
-        }
-
-        #loader {
-            font-family: 'RustFont', sans-serif;
-            display: none;
+            border: 1px solid black;
             margin-top: 20px;
-            color: #a8a8a8;
-            text-align: center;
+            display: block;
         }
 
         input, button {
@@ -82,95 +77,28 @@
         button:hover {
             background-color: rgba(255, 255, 255, 0.3);
         }
-
-        #progress {
-            font-family: 'RustFont', sans-serif;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.658);
-            border: 1px solid rgba(204, 204, 204, 0.5);
-            border-radius: 5px;
-            overflow: hidden;
-            display: none;
-            margin-top: 20px;
-        }
-
-        #progressBar {
-            width: 0;
-            height: 20px;
-            background-color: rgba(139, 0, 0, 0.7);
-            text-align: center;
-            line-height: 20px;
-            color: white;
-        }
-
-        .content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .footer {
-            margin-top: auto;
-            padding: 10px;
-            color: #ffffff;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="content">
-            <h1>Письмо от Неизвестного солдата</h1>
+        <h1>Письмо от Неизвестного солдата</h1>
 
-            <!-- Поле для ввода имени -->
-            <label for="nameInput">Имя:</label>
-            <input type="text" id="nameInput" placeholder="Введите имя">
+        <!-- Поля для ввода имени и возраста -->
+        <label for="nameInput">Имя:</label>
+        <input type="text" id="nameInput" placeholder="Введите имя">
 
-            <!-- Поле для ввода возраста -->
-            <label for="ageInput">Возраст:</label>
-            <input type="number" id="ageInput" placeholder="Введите возраст">
+        <label for="ageInput">Возраст:</label>
+        <input type="number" id="ageInput" placeholder="Введите возраст">
 
-            <!-- Кнопка для генерации письма -->
-            <button id="drawButton">Получить письмо</button>
-            <canvas id="canvas"></canvas>
-            <div id="loader">Создание письма...</div>
-            <div id="progress"><div id="progressBar">0%</div></div>
-        </div>
-        <div class="footer"></div>
+        <!-- Кнопки для генерации и скачивания письма -->
+        <button id="generateButton">Предпросмотр письма</button>
+        <canvas id="letterCanvas" width="600" height="800"></canvas>
+        <button id="downloadButton">Скачать письмо</button>
     </div>
 
     <script>
-        // Обработчик нажатия на кнопку
-        document.getElementById('drawButton').addEventListener('click', function() {
-            const name = document.getElementById('nameInput').value; // Получаем имя
-            const ageInput = document.getElementById('ageInput').value; // Получаем возраст
-            const age = parseInt(ageInput, 10); // Преобразуем возраст в число
-
-            if (!name) {
-                alert('Пожалуйста, введите имя.'); // Проверка на пустое имя
-                return;
-            }
-
-            if (isNaN(age)) {
-                alert('Пожалуйста, введите корректный возраст.'); // Проверка на корректность возраста
-                return;
-            }
-
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            const loader = document.getElementById('loader');
-            const progress = document.getElementById('progress');
-            const progressBar = document.getElementById('progressBar');
-
-            loader.style.display = 'block'; // Показываем индикатор загрузки
-            progress.style.display = 'block'; // Показываем прогресс-бар
-
-            progressBar.style.width = '0%';
-            progressBar.innerText = '0%';
-
-            // Тексты писем
-            const texts = {
+        // Тексты писем
+        const texts = {
                 text1: `Здравствуй, ${name},\nВ этом году мы отмечаем 80-ю годовщину Великой Победы – дня, который стал символом мужества, чести и несгибаемой воли нашего народа. Мы сражались за мирное небо, и теперь ваша задача – сохранить его, помня о подвигах прошлого и строя достойное будущее.\nЯ пишу тебе, чтобы вдохновить на успешную учебу и новые достижения. Каждый день, погружаясь в знания, ты строишь своё будущее, которое обязательно будет светлым и интересным.\nПомни, что каждая трудность — это лишь ступенька к успеху. Не бойся задавать вопросы, стремиться к лучшему и верить в себя. Удача обычно улыбается тем, кто усердно трудится и не сдается перед преградами.\nЖелаю тебе терпения, настойчивости и веры в свои силы. Учись с радостью и вдохновением, ведь это время – самое важное в твоей жизни.\nС уважением,\nНеизвестный солдат`,
                 text2: `Здравствуй, ${name},\n80 лет назад наш народ одержал Великую Победу, отстояв свободу и мир для будущих поколений. Помни, что сила духа, настойчивость и труд – ключи к великим свершениям, и именно от вас зависит, каким будет завтрашний день.\nЯ пишу тебе, чтобы напомнить, как важна учеба и стремление к знаниям. Каждый день — это возможность стать лучше, узнать что-то новое и сделать шаг к своим мечтам. Учеба требует усердия и терпения, но эти усилия принесут плоды.\nПусть каждое занятие будет для тебя шагом к успеху. Не бойся встречать трудности — они закаляют дух и делают сильнее. Удача сопутствует тем, кто верит в себя и упорно трудится.\nПомни, что каждый маленький успех — это значительное достижение. Желаю тебе удачи во всех начинаниях. Сохраняй любопытство и не останавливайся на достигнутом.\nС уважением,\nНеизвестный солдат`,
                 text3: `Здравствуй, ${name},\nПрошло 80 лет с того дня, когда наш народ с честью и отвагой отстоял право на мирную жизнь. Мы верили в светлое будущее и боролись за него, а теперь ваша очередь сделать этот мир лучше – знаниями, добрыми делами и уважением к истории.\nЯ пишу тебе, чтобы передать свои сердечные пожелания. Учеба — это удивительное путешествие, полное открытий и возможностей. Каждое занятие приближает тебя к мечтам, и я верю, что ты сможешь добиться многого.\nНе бойся задавать вопросы и искать ответы. Это помогает расти и развиваться. Стремись к знаниям с энтузиазмом, и они откроют перед тобой новые горизонты.\nЖелаю тебе удачи в учебе и вдохновения в каждом начинании. Пусть доброта и мудрость ведут тебя по жизни, а поддержка близких всегда будет рядом. Сохраняй веру в себя и двигайся к своим целям, и тогда все обязательно получится!\nС уважением,\nНеизвестный солдат`,
@@ -179,95 +107,75 @@
                 text6: `Здравствуй, ${name},\nВеликая Победа – это не просто дата в календаре, а символ стойкости, силы и веры в лучшее будущее. Прошло 80 лет, но этот подвиг живет в наших сердцах, напоминая, что усердие, смелость и честность всегда ведут к победе.\nХочу пожелать тебе здоровья и счастья, пусть каждый новый день приносит радость.\nПомни, что даже в самых темных моментах есть место свету. Окружай себя людьми, которые вдохновляют тебя, и не забывай о своих мечтах. Каждый шаг вперед — это шаг к светлому будущему.\nСохраняй веру в добро, добро обязательно вернется. Пусть в твоей жизни будет больше улыбок, тепла и заботы. Береги себя и тех, кто рядом.\nНадеюсь, вскоре мы увидим мир, в котором нет места войне. Желаю тебе любви, мужества и счастья в каждой мелочи.\nС уважением,\nНеизвестный солдат`
             };
 
-            // Логика выбора текста в зависимости от возраста
-            let textSelect;
-            if (age < 18) {
-                const randomIndex = Math.floor(Math.random() * 3) + 1; // Случайный текст 1-3
-                textSelect = `text${randomIndex}`;
-            } else {
-                const randomIndex = Math.floor(Math.random() * 3) + 4; // Случайный текст 4-6
-                textSelect = `text${randomIndex}`;
-            }
-
-            const templateText = texts[textSelect];
-            const img = new Image();
-
-            img.onload = function() {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-
-                let topOffset = 750; // Отступ сверху для текста
-                const leftOffset = 150; // Отступ слева
-                const rightOffset = 150; // Отступ справа
-
-                ctx.font = `50px RustFont`;
-                ctx.fillStyle = 'black';
-
-                const words = templateText.split(' ');
-                let line = '';
-                const lineHeight = 60;
-
-                // Разбиваем текст на строки
-                for (let i = 0; i < words.length; i++) {
-                    const testLine = line + words[i] + ' ';
-                    const testWidth = ctx.measureText(testLine).width;
-
-                    if (testWidth > (canvas.width - leftOffset - rightOffset)) {
-                        ctx.fillText(line.trim(), leftOffset, topOffset);
-                        line = words[i] + ' ';
-                        topOffset += lineHeight;
-                    } else {
-                        line = testLine;
-                    }
-                }
-                ctx.fillText(line.trim(), leftOffset, topOffset);
-
-                // Скачивание письма
-                const link = document.createElement('a');
-                link.download = 'letter.png';
-                link.href = canvas.toDataURL('image/png');
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                loader.style.display = 'none'; // Скрываем индикатор загрузки
-                progress.style.display = 'none'; // Скрываем прогресс-бар
-            };
-
-            const randomTemplateIndex = Math.floor(Math.random() * 5) + 1; // Случайный выбор шаблона от 1 до 5
-            img.src = `congr-let/letter-from-soldier/templates/template${randomTemplateIndex}.png`; // Путь к случайному шаблону
-
-            let progressWidth = 0;
-            const interval = setInterval(() => {
-                if (progressWidth >= 100) {
-                    clearInterval(interval);
+        // Функция для переноса текста на несколько строк
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i] + ' ';
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && line.length > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[i] + ' ';
+                    y += lineHeight;
                 } else {
-                    progressWidth++;
-                    progressBar.style.width = progressWidth + '%';
-                    progressBar.innerText = progressWidth + '%';
+                    line = testLine;
                 }
-            }, 30);
-        });
-
-        // Загрузка шрифтов
-        function loadFonts(fonts) {
-            return Promise.all(fonts.map(font => {
-                return new Promise(resolve => {
-                    const fontFace = new FontFace(font.name, `url(${font.url})`);
-                    fontFace.load().then(function(loadedFont) {
-                        document.fonts.add(loadedFont);
-                        resolve();
-                    });
-                });
-            }));
+            }
+            ctx.fillText(line, x, y);
         }
 
-        loadFonts([
-            { name: 'RustFont', url: 'rust.ttf' }
-        ]).then(() => {
-            console.log('Шрифты загружены!');
-        });
-    </script>
+        // Функция для генерации письма
+        function generateLetter() {
+            const name = document.getElementById('nameInput').value.trim();
+            const ageInput = document.getElementById('ageInput').value.trim();
+            const age = parseInt(ageInput, 10);
 
-</body></html>
+            if (!name || isNaN(age)) {
+                alert('Пожалуйста, заполните все поля корректно!');
+                return;
+            }
+
+            // Выбор текста в зависимости от возраста
+            let textKey;
+            if (age < 18) {
+                const randomIndex = Math.floor(Math.random() * 3) + 1; // Случайный текст 1-3
+                textKey = `text${randomIndex}`;
+            } else {
+                const randomIndex = Math.floor(Math.random() * 3) + 4; // Случайный текст 4-6
+                textKey = `text${randomIndex}`;
+            }
+
+            const text = texts[textKey].replace('{name}', name);
+
+            const canvas = document.getElementById('letterCanvas');
+            const ctx = canvas.getContext('2d');
+
+            const background = new Image();
+            const randomTemplateIndex = Math.floor(Math.random() * 5) + 1; // Случайный шаблон от 1 до 5
+            background.src = `templates/template${randomTemplateIndex}.png`;
+
+            background.onload = function () {
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Рисуем фон
+                ctx.font = "20px 'RustFont', sans-serif";
+                ctx.fillStyle = "black";
+                wrapText(ctx, text, 50, 300, 500, 30); // Рисуем текст письма
+            };
+        }
+
+        // Функция для скачивания письма
+        function downloadLetter() {
+            const canvas = document.getElementById('letterCanvas');
+            const link = document.createElement('a');
+            link.download = 'letter.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Привязываем функции к кнопкам
+        document.getElementById('generateButton').addEventListener('click', generateLetter);
+        document.getElementById('downloadButton').addEventListener('click', downloadLetter);
+    </script>
+</body>
+</html>
