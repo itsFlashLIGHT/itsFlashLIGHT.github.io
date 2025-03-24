@@ -92,7 +92,7 @@
 
         <!-- Кнопки для генерации и скачивания письма -->
         <button id="generateButton">Предпросмотр письма</button>
-        <canvas id="letterCanvas" width="600" height="800"></canvas>
+        <canvas id="letterCanvas" width="600" height="1000"></canvas>
         <button id="downloadButton">Скачать письмо</button>
     </div>
 
@@ -162,9 +162,9 @@
 
             background.onload = function () {
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Рисуем фон
-                ctx.font = "20px 'RustFont', sans-serif";
+                ctx.font = "18px 'RustFont', sans-serif"; // Уменьшен размер шрифта
                 ctx.fillStyle = "black";
-                wrapText(ctx, text, 50, 300, 500, 30); // Рисуем текст письма
+                wrapText(ctx, text, 50, 300, 500, 25); // Рисуем текст письма
             };
         }
 
