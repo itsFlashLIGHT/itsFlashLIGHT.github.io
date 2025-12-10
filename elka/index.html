@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Новогодние предсказания</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --card:#0f1724;
+    --accent:#ffd166;
+    --modal:#ffffff;
+  }
+  html,body{height:100%;margin:0;font-family:Inter, "Helvetica Neue", Arial, sans-serif;background:linear-gradient(180deg,#041025 0%, #0b1220 60%);color:#fff}
+  .page{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    box-sizing:border-box;
+  }
+
+  .scene{
+    width:100%;
+    max-width:900px;
+    aspect-ratio: 4/5;
+    position:relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%);
+    border-radius:16px;
+    padding:20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    overflow:hidden;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:6px;
+  }
+  h1{margin:0;font-size:1.4rem;letter-spacing:0.6px}
+  p.lead{margin:6px 0 18px;opacity:0.9;font-size:0.95rem}
+
+  /* snow */
+  .snow{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .flake{
+    position:absolute;
+    top:-10%;
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,0.9);
+    animation:fall linear infinite;
+    filter:blur(0.2px);
+    opacity:0.9;
+  }
+  @keyframes fall{
+    to {transform: translateY(120vh) translateX(40vw); opacity:0.2}
+  }
+
+  /* tree and gifts area */
+  .yard{position:absolute;left:0;right:0;bottom:18px;top:50%;transform:translateY(-50%);display:flex;align-items:flex-end;justify-content:center}
+  .tree-wrap{width:460px;max-width:60%;position:relative}
+
+  /* simple SVG container */
+  .tree-svg{display:block;width:100%;height:auto}
+
+  /* gifts row */
+  .gifts{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:-6px;
+    display:flex;
+    gap:18px;
+    align-items:flex-end;
+    justify-content:center;
+    padding:12px;
+  }
+
+  .gift{
+    width:78px;height:78px;border-radius:8px;
+    background:linear-gradient(180deg,#b80d45,#8b0632);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+    transform-origin:center;
+    cursor:pointer;
+    position:relative;
+    outline:none;
+    border:3px solid rgba(255,255,255,0.04);
+  }
+  .gift:focus{box-shadow:0 0 0 4px rgba(255,209,102,0.14)}
+  .gift:hover{transform:translateY(-6px) scale(1.03)}
+  .gift .bow{
+    position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:56px;height:14px;background:linear-gradient(90deg,#ffdd55,#ffd166);
+    border-radius:4px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.4);
+  }
+  .gift[data-color="green"]{background:linear-gradient(180deg,#1b8a3e,#0f672b)}
+  .gift[data-color="blue"]{background:linear-gradient(180deg,#1d6fb3,#0e4d7f)}
+  .gift[data-color="purple"]{background:linear-gradient(180deg,#7b3fa3,#5b2b79)}
+
+  .gift-label{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:12px;opacity:0.95;
+    background:rgba(255,255,255,0.06);padding:3px 6px;border-radius:6px;
+  }
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:40}
+  .overlay.open{display:flex}
+  .modal{
+    width:min(640px,96%);background:var(--card);color:var(--modal);padding:22px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    transform:translateY(10px);animation:modal-in .18s ease-out;
+  }
+  @keyframes modal-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .modal h2{margin:0 0 8px;font-size:1.2rem;color:var(--accent)}
+  .modal p{margin:0 0 12px;font-size:1.05rem;color:#fff}
+  .modal .hint{opacity:0.85;font-size:0.9rem;color:rgba(255,255,255,0.8)}
+  .close-btn{margin-top:12px;padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#102020;font-weight:600;cursor:pointer}
+
+  /* tiny sparkle animation */
+  .sparkle{
+    position:absolute; width:8px;height:8px;border-radius:50%; background:var(--accent); opacity:0.95; filter:blur(.6px);
+    animation:pop .6s ease-out forwards;
+    z-index:50;
+  }
+  @keyframes pop{
+    from{transform:scale(0) translateY(0);opacity:0.9}
+    to{transform:scale(1.8) translateY(-40px);opacity:0}
+  }
+
+  /* footer note */
+  .note{position:absolute;left:18px;bottom:18px;font-size:12px;opacity:0.75;}
+  @media (max-width:520px){
+    .gift{width:64px;height:64px}
+    .tree-wrap{max-width:72%}
+  }
+
+  #confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* клики проходят сквозь */
+}
+</style>
+</head>
+<canvas id="confetti"></canvas>
+<body>  
+<div class="page">
+  <div class="scene" role="application" aria-label="Новогодняя ёлка с подарками">
+    <header>
+      <h1>Новогодняя ёлка — кликни на подарок</h1>
+      <p class="lead">Нажми на любой подарок — получишь предсказание на год.</p>
+    </header>
+
+    <div class="yard" aria-hidden="false">
+      <div class="tree-wrap">
+        <!-- Простая елка через SVG -->
+        <svg class="tree-svg" viewBox="0 0 300 420" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#0f9d58"/>
+              <stop offset="1" stop-color="#0a6a36"/>
+            </linearGradient>
+            <linearGradient id="trunk" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#8b5a2b"/>
+              <stop offset="1" stop-color="#6b3f22"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Ствол -->
+          <rect x="130" y="310" width="40" height="60" rx="6" fill="url(#trunk)"/>
+
+          <!-- Елка -->
+          <g transform="translate(0,30)">
+            <path d="M40 90 L150 10 L260 90 Z" fill="url(#g1)"/>
+            <path d="M30 150 L150 40 L270 150 Z" fill="url(#g1)"/>
+            <path d="M20 220 L150 90 L280 220 Z" fill="url(#g1)"/>
+            <path d="M15 290 L150 160 L285 290 Z" fill="url(#g1)"/>
+          </g>
+
+          <!-- Звезда -->
+          <polygon points="150,0 160,25 188,25 166,40 174,68 150,52 126,68 134,40 112,25 140,25"
+                   fill="#ffd166"/>
+
+        </svg>
+
+        <div class="gifts" role="list" aria-label="Подарки">
+          <button class="gift" role="listitem" data-id="0" data-color="red" aria-label="Подарок красный">
+            <div class="bow" aria-hidden="true"></div>
+            <div class="gift-label">Подарок 1</div>
+          </button>
+          <button class="gift" role="listitem" data-id="1" data-color="green" aria-label="Подарок зелёный">
+            <div class="bow" aria-hidden="true"></div>
+            <div class="gift-label">Подарок 2</div>
+          </button>
+          <button class="gift" role="listitem" data-id="2" data-color="blue" aria-label="Подарок синий">
+            <div class="bow" aria-hidden="true"></div>
+            <div class="gift-label">Подарок 3</div>
+          </button>
+          <button class="gift" role="listitem" data-id="3" data-color="purple" aria-label="Подарок фиолетовый">
+            <div class="bow" aria-hidden="true"></div>
+            <div class="gift-label">Подарок 4</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" >Ни один подарок не содержит личных данных — всё локально.</div>
+
+    <!-- snow container -->
+    <div class="snow" aria-hidden="true"></div>
+
+    <!-- modal -->
+    <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal" role="document">
+        <h2 id="modal-title">Твое предсказание</h2>
+        <p id="modal-text">...</p>
+        <div class="hint">Поделись радостью с друзьями — открой ещё один подарок!</div>
+        <button class="close-btn" id="closeBtn">Закрыть</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ====== Набор предсказаний (редактируй по желанию) ====== */
+const predictions = [
+  "В этом году ты найдёшь новое увлечение, которое принесёт радость.",
+  "Грядут маленькие, но приятные изменения в распорядке дня.",
+  "Ожидай сюрприз от старого друга — он вернёт приятные воспоминания.",
+  "Твоя настойчивость будет вознаграждена — жди профессионального роста.",
+  "Путешествие (даже маленькое) оживит голову и принесёт полезные идеи.",
+  "В этом году важно заботиться о здоровье — выдели время для отдыха.",
+  "Любовь и тепло дома укрепят тебя в трудные дни.",
+  "Новый навык, который ты начнёшь изучать, скоро станет полезным.",
+  "Финансовый успех придёт благодаря аккуратному планированию.",
+  "Не бойся пробовать снова — ошибка сейчас станет опытом завтра."
+];
+
+/* ====== создание снега ====== */
+const snowContainer = document.querySelector('.snow');
+for(let i=0;i<24;i++){
+  const f = document.createElement('div');
+  f.className='flake';
+  // рандомные позиция и задержка
+  f.style.left = Math.random()*100 + '%';
+  f.style.width = (4 + Math.random()*10) + 'px';
+  f.style.height = f.style.width;
+  f.style.animationDuration = (6 + Math.random()*8) + 's';
+  f.style.opacity = (0.5 + Math.random()*0.6);
+  f.style.top = (-10 - Math.random()*20) + '%';
+  snowContainer.appendChild(f);
+}
+
+/* ====== логика подарков и модального окна ====== */
+const gifts = Array.from(document.querySelectorAll('.gift'));
+const overlay = document.getElementById('overlay');
+const modalText = document.getElementById('modal-text');
+const closeBtn = document.getElementById('closeBtn');
+
+/* генерирует случайный индекс */
+function randInt(max){ return Math.floor(Math.random()*max); }
+
+/* покажем модалку с предсказанием */
+function showPrediction(text, triggerEl){
+  modalText.textContent = text;
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+  // Запуск конфетти
+  launchConfetti();
+  // небольшой sparkle возле кнопки
+  if(triggerEl){
+    const rect = triggerEl.getBoundingClientRect();
+    const sparkle = document.createElement('div');
+    sparkle.className='sparkle';
+    document.body.appendChild(sparkle);
+    sparkle.style.left = (rect.left + rect.width/2) + 'px';
+    sparkle.style.top = (rect.top + 10) + 'px';
+    setTimeout(()=> sparkle.remove(),700);
+  }
+}
+
+/* обработчик клика */
+gifts.forEach(g=>{
+  g.addEventListener('click', (e)=>{
+    const i = randInt(predictions.length);
+    showPrediction(predictions[i], g);
+    // можно сделать, чтобы подарок становился неактивным после открытия:
+    // g.disabled = true; g.style.opacity = 0.6;
+  });
+  // клавиатурная доступность: Enter / Space
+  g.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      g.click();
+    }
+  })
+});
+
+/* закрытие модалки */
+closeBtn.addEventListener('click', ()=>{
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+});
+overlay.addEventListener('click', (e)=>{
+  if(e.target === overlay){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+  }
+});
+
+/* ====== Дополнительно: легко изменить предсказания в runtime (пример) ====== */
+/* Пример: window.addPrediction("Новое предсказание") */
+window.addPrediction = function(text){
+  if(typeof text === 'string' && text.trim()){
+    predictions.push(text.trim());
+    return true;
+  }
+  return false;
+}
+
+/* Мелкая оптимизация: подсказка для экранных читалок при открытии модалки */
+overlay.addEventListener('transitionend', ()=>{
+  if(overlay.classList.contains('open')){
+    closeBtn.focus();
+  }
+});
+
+/* Анимация конфетти */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+let confetti = [];
+let w, h;
+
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+resize();
+window.onresize = resize;
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function createConfetti() {
+    confetti = [];
+    for (let i = 0; i < 150; i++) {
+        confetti.push({
+            x: random(0, w),
+            y: random(-h, 0),
+            r: random(3, 7),
+            dx: random(-2, 2),
+            dy: random(2, 5),
+            color: `hsl(${random(0, 360)}, 100%, 60%)`
+        });
+    }
+}
+
+function render() {
+    ctx.clearRect(0, 0, w, h);
+    confetti.forEach((p, i) => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        if (p.y > h) confetti[i].y = -10;
+    });
+    requestAnimationFrame(render);
+}
+
+function launchConfetti() {
+    createConfetti();
+    render();
+
+    // конфетти прекращаются через 3 сек
+    setTimeout(() => confetti = [], 3000);
+}
+</script>
+</body>
+</html>
